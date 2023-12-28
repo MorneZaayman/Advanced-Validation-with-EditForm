@@ -1,0 +1,70 @@
+﻿@page "/"
+@using System.ComponentModel.DataAnnotations
+
+<PageTitle>Home</PageTitle>
+
+<h1>Advanced Validation with EditForm</h1>
+
+<EditForm EditContext="@EditContext" OnValidSubmit="@OnValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="form-group">
+        <label>ID:</label>
+        <InputText @bind-Value="User.Id" class="form-control" />
+        <ValidationMessage For="@(() => User.Id)" />
+        
+    </div>
+    <div class="form-group">
+        <label>First Name:</label>
+        <InputText @bind-Value="User.FirstName" class="form-control" />
+        <ValidationMessage For="@(() => User.FirstName)" />
+    </div>
+    <div class="form-group">
+        <label>Last Name:</label>
+        <InputText @bind-Value="User.LastName" class="form-control" />
+        <ValidationMessage For="@(() => User.LastName)" />
+    </div>
+    <div class="form-group">
+        <label>Age:</label>
+        <InputNumber @bind-Value="User.Age" class="form-control" />
+        <ValidationMessage For="@(() => User.Age)" />
+    </div>
+
+     <button class="btn btn-primary" type="submit">Submit</button> 
+
+</EditForm>
+
+@code {
+    UserModel? User { get; set; }
+    public EditContext? EditContext { get; set; }
+
+    public void OnValidSubmit()
+    {
+        Console.WriteLine("OnValidSubmit called");
+    }
+
+    protected override void OnInitialized()
+    {
+        User = new UserModel();
+        EditContext = new EditContext(User);
+    }
+
+    public class UserModel
+    {
+        [Required]
+        [IsParsableToType<Guid>]
+        public string? Id { get; set; }
+
+        [Required]
+        public string? FirstName { get; set; }
+
+        [Required]
+        public string? LastName { get; set; }
+
+        [Required]
+        [Range(0, 120)]
+        public int? Age { get; set; }
+    }
+
+
+}
